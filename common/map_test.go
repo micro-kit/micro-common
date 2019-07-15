@@ -67,3 +67,31 @@ func TestOrderMap_OrderMapUnmarshal(t *testing.T) {
 	}
 	t.Log(string(js))
 }
+
+func TestOrderMap_Range(t *testing.T) {
+	// 要加载的map
+	data := make(map[string]interface{}, 0)
+	data["1"] = "ha1"
+	data["2"] = "ha2"
+	data["10"] = "h10"
+	data["3"] = "ha3"
+	// key转数字，从小到大排序
+	less := func(i, j interface{}) bool {
+		ii, _ := strconv.Atoi(fmt.Sprint(i))
+		jj, _ := strconv.Atoi(fmt.Sprint(j))
+		return ii < jj
+	}
+	// 有序map对象
+	om := NewOrderMap(less)
+	err := om.LoadStringMap(data)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	om.Range(func(k, v interface{}) bool {
+		t.Logf("%v:%v \n", k, v)
+		return true
+	})
+
+	t.Log("map长度 ", om.Len())
+}

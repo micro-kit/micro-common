@@ -94,13 +94,30 @@ func (om *OrderMap) Del(k interface{}) {
 	om.data.Delete(k)
 }
 
-// MarshalJSON 将对象转为json字节
-func (om *OrderMap) MarshalJSON() ([]byte, error) {
-	if om == nil {
-		return []byte("null"), nil
-	}
+// Range 循环遍历 - 有序的 - 和sync.Map的Range相同
+func (om *OrderMap) Range(f func(key, value interface{}) bool) {
 	// 取出所有key
-	keys := make([]interface{}, 0)
+	keys := om.Keys()
+	for _, key := range keys {
+		val, _ := om.data.Load(key)
+		isStop := f(key, val)
+		// 返回false终止迭代
+		if isStop == false {
+			return
+		}
+	}
+}
+
+// Len 获取map长度
+func (om *OrderMap) Len() int {
+	keys := om.Keys()
+	return len(keys)
+}
+
+// Keys 获取所有key - 有序的
+func (om *OrderMap) Keys() (keys []interface{}) {
+	// 取出所有key
+	keys = make([]interface{}, 0)
 	om.data.Range(func(key, value interface{}) bool {
 		keys = append(keys, key)
 		return true
@@ -112,6 +129,16 @@ func (om *OrderMap) MarshalJSON() ([]byte, error) {
 	sort.Slice(keys, func(i, j int) bool {
 		return om.less(keys[i], keys[j])
 	})
+	return
+}
+
+// MarshalJSON 将对象转为json字节
+func (om *OrderMap) MarshalJSON() ([]byte, error) {
+	if om == nil {
+		return []byte("null"), nil
+	}
+	// 取出所有key
+	keys := om.Keys()
 	// 拼接json字符串
 	body := "{"
 	for _, key := range keys {
