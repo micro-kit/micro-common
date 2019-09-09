@@ -9,14 +9,17 @@ import (
 
 /* 微服务返回错误代码列表 */
 
-// 基础错误
+// TODO 此处错误代码应在某区间内为公共错误码、各自程序可以在init中将错误码补充到错误列表
+
+// 基础错误 - 错误码 +-32768
 var (
 	errors = map[int16]*MicroError{
+		10000: NewMicroError(10000, "Unknown server error", nil), // 服务端错误
+
 		10001: NewMicroError(10001, "record not found", gorm.ErrRecordNotFound), // db数据未查询到
 		10101: NewMicroError(10101, "key not found", goredis.Nil),               // redis key为空
 		10102: NewMicroError(10102, "Redis operation error", nil),               // redis 操作错误
 
-		30000: NewMicroError(30000, "Unknown server error", nil), // 服务端错误
 	}
 )
 
@@ -57,7 +60,14 @@ func GetMicroError(code int16, errs ...error) *MicroError {
 			microErr.Err = mErr.Err
 		}
 	} else {
-		microErr.Msg = errors[30000].Msg
+		microErr.Msg = errors[10000].Msg
 	}
 	return microErr
+}
+
+// InitError 用于注册某个服务的自定义错误
+func InitError(errs ...*MicroError) {
+	for _, err := range errs {
+		errors[err.Code] = err
+	}
 }
