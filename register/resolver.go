@@ -27,7 +27,6 @@ func NewResolver(etcdAddr string) resolver.Builder {
 
 func (r *etcdResolver) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOption) (resolver.Resolver, error) {
 	var err error
-
 	if cli == nil {
 		cli, err = clientv3.New(clientv3.Config{
 			Endpoints:   strings.Split(r.rawAddr, ";"),
@@ -37,11 +36,8 @@ func (r *etcdResolver) Build(target resolver.Target, cc resolver.ClientConn, opt
 			return nil, err
 		}
 	}
-
 	r.cc = cc
-
 	go r.watch("/" + target.Scheme + "/" + target.Endpoint + "/")
-
 	return r, nil
 }
 
@@ -60,7 +56,6 @@ func (r etcdResolver) Close() {
 
 func (r *etcdResolver) watch(keyPrefix string) {
 	var addrList []resolver.Address
-
 	getResp, err := cli.Get(context.Background(), keyPrefix, clientv3.WithPrefix())
 	if err != nil {
 		log.Println(err)
@@ -69,9 +64,7 @@ func (r *etcdResolver) watch(keyPrefix string) {
 			addrList = append(addrList, resolver.Address{Addr: strings.TrimPrefix(string(getResp.Kvs[i].Key), keyPrefix)})
 		}
 	}
-
 	r.cc.NewAddress(addrList)
-
 	rch := cli.Watch(context.Background(), keyPrefix, clientv3.WithPrefix())
 	for n := range rch {
 		for _, ev := range n.Events {

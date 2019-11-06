@@ -53,14 +53,11 @@ func withAlive(name string, addr string, ttl int64) error {
 	if err != nil {
 		return err
 	}
-
 	// fmt.Printf("key:%v\n", "/"+schema+"/"+name+"/"+addr)
-
 	_, err = cli.Put(context.Background(), "/"+schema+"/"+name+"/"+addr, addr, clientv3.WithLease(leaseResp.ID))
 	if err != nil {
 		return err
 	}
-
 	_, err = cli.KeepAlive(context.Background(), leaseResp.ID)
 	if err != nil {
 		return err

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	etcdAddrs  = "127.0.0.1:2379"  // 多个使用';'分开
+	etcdAddrs  = "127.0.0.1:12379" // 多个使用';'分开
 	svcName    = "svc"             // 微服务名称
 	listenAddr = "127.0.0.1:28080" // grpc服务监听地址 - 本test未实现grpc监听，测试时请填写正确的grpc监听地址
 )

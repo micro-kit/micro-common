@@ -13,7 +13,7 @@ import (
 
 // 基础错误 - 错误码 +-32768
 var (
-	errors = map[int16]*MicroError{
+	errors = map[int32]*MicroError{
 		10000: NewMicroError(10000, "Unknown server error", nil), // 服务端错误
 
 		10001: NewMicroError(10001, "record not found", gorm.ErrRecordNotFound), // db数据未查询到
@@ -26,15 +26,16 @@ var (
 // MicroError 错误类型
 type MicroError struct {
 	Msg  string `json:"msg"`  // 错误信息
-	Code int16  `json:"code"` // 错误代码
+	Code int32  `json:"code"` // 错误代码
 	Err  error  `json:"err"`  // 原始err信息
 }
 
 // NewMicroError 创建MicroError
-func NewMicroError(code int16, msg string, err error) *MicroError {
+func NewMicroError(code int32, msg string, err error) *MicroError {
 	return &MicroError{
 		Code: code,
 		Msg:  msg,
+		Err:  err,
 	}
 }
 
@@ -45,7 +46,7 @@ func (err *MicroError) Error() string {
 }
 
 // GetMicroError 通过MicroError创建错误，补充err部分
-func GetMicroError(code int16, errs ...error) *MicroError {
+func GetMicroError(code int32, errs ...error) *MicroError {
 	var err error
 	if len(errs) > 0 {
 		err = errs[0]

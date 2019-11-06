@@ -116,6 +116,8 @@ func NewDbClient(cfg *config.DbConfig) (*gorm.DB, error) {
 			time.Sleep(time.Second * 30)
 		}
 	}()
+	// 防止我条件修改和删除操作
+	db.BlockGlobalUpdate(true)
 
 	return db, err
 }

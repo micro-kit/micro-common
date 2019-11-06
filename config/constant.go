@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 // 全局配置
 const (
@@ -16,6 +19,12 @@ const (
 	DEFAULT_SVC_NAME string = "default"
 	// 当前运行环境，dev or pro
 	DEFAULT_MODE string = "dev"
+	// 默认注册ttl 秒
+	DEFAULT_REGISTER_TTL int64 = 5
+	// 服务调用地址
+	DEFAULT_GRPC_ADVERTISE_ADDR string = ""
+	// 服务注册根路径
+	DEFAULT_SCHEMA string = "microkit"
 )
 
 // GetETCDAddr 读取etcd服务地址
@@ -55,12 +64,12 @@ func GetTCPAddr() string {
 }
 
 // GetSvcName 获取服务名 - [redis 使用不传type，一个服务部分类型使用key]
-func GetSvcName(svcType string) string {
+func GetSvcName() string {
 	svcName := os.Getenv("SVC_NAME")
 	if svcName == "" {
 		svcName = DEFAULT_SVC_NAME
 	}
-	return svcName + "/" + svcType
+	return svcName
 }
 
 // GetMode 当前运行环境
@@ -70,4 +79,39 @@ func GetMode() string {
 		return DEFAULT_MODE
 	}
 	return mode
+}
+
+// GetRegisterTTL 获取注册ttl
+func GetRegisterTTL() int64 {
+	registerTTL := os.Getenv("DEFAULT_REGISTER_TTL")
+	if registerTTL == "" {
+		return DEFAULT_REGISTER_TTL
+	}
+	// 转数字
+	registerTTLNum, _ := strconv.Atoi(registerTTL)
+	if registerTTLNum == 0 {
+		return DEFAULT_REGISTER_TTL
+	}
+	return int64(registerTTLNum)
+}
+
+// GetGRPCAdvertiseAddr 读取grpc注册地址
+func GetGRPCAdvertiseAddr() string {
+	grpcAdvertiseAddr := os.Getenv("DEFAULT_GRPC_ADVERTISE_ADDR")
+	if grpcAdvertiseAddr == "" {
+		if DEFAULT_GRPC_ADVERTISE_ADDR == "" {
+			return DEFAULT_GRPC_ADDR
+		}
+		return DEFAULT_GRPC_ADVERTISE_ADDR
+	}
+	return grpcAdvertiseAddr
+}
+
+// GetSchema 获取注册根地址
+func GetSchema() string {
+	schema := os.Getenv("DEFAULT_SCHEMA")
+	if schema == "" {
+		return DEFAULT_SCHEMA
+	}
+	return schema
 }
