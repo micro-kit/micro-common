@@ -11,7 +11,7 @@ import (
 
 // GetPrefixKey 给key添加前缀
 func GetPrefixKey(key string) string {
-	svcName := config.GetSvcName("")
+	svcName := config.GetSvcName()
 	svcName = strings.Trim(svcName, "/")
 	return "vivi:" + svcName + ":" + key
 }

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/mvcc/mvccpb"
 	"github.com/naoina/toml"
+	"go.etcd.io/etcd/clientv3"
+	"go.etcd.io/etcd/mvcc/mvccpb"
 )
 
 // RedisConfg redis配置
@@ -20,7 +20,7 @@ type RedisConfg struct {
 
 // GetRedisConfg 获取redis配置
 func GetRedisConfg(cli *clientv3.Client, updateConfig func(*RedisConfg)) error {
-	key := "root/config/" + GetSvcName() + "redis/cfg.toml"
+	key := "root/config/" + GetSvcName() + "/redis/cfg.toml"
 	// fmt.Println(key)
 	// 初始化master连接
 	etcdResp, err := cli.Get(context.Background(), key, clientv3.WithPrefix())

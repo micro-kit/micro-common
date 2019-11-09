@@ -6,7 +6,7 @@ import (
 
 	"github.com/micro-kit/micro-common/config"
 	"github.com/micro-kit/micro-common/etcdcli"
-	"github.com/micro-kit/micro-common/log"
+	"github.com/micro-kit/micro-common/logger"
 	goredis "gopkg.in/redis.v5"
 )
 
@@ -35,11 +35,11 @@ func initRedis() {
 	err = config.GetRedisConfg(etcdcli.EtcdCli, func(cfg *config.RedisConfg) {
 		Client, err = NewClient(cfg)
 		if err != nil {
-			log.Logger.Panicw("Creating redis connection errors", "err", err)
+			logger.Logger.Panicw("Creating redis connection errors", "err", err)
 		}
 	})
 	if err != nil {
-		log.Logger.Panicw("Get redis configuration error", "err", err)
+		logger.Logger.Panicw("Get redis configuration error", "err", err)
 	}
 }
 
@@ -49,7 +49,7 @@ func NewClient(cfg *config.RedisConfg) (client goredis.Cmdable, err error) {
 		err = errors.New("The redis configuration file can not be empty.")
 		return
 	}
-	log.Logger.Infow("Start connecting to redis database")
+	logger.Logger.Infow("Start connecting to redis database")
 	if cfg.IsCluster == true {
 		// redis集群
 		client = goredis.NewClusterClient(&goredis.ClusterOptions{
@@ -71,12 +71,12 @@ func NewClient(cfg *config.RedisConfg) (client goredis.Cmdable, err error) {
 		for {
 			err := client.Ping().Err()
 			if err != nil {
-				log.Logger.Errorw("redis ping error", "err", err)
+				logger.Logger.Errorw("redis ping error", "err", err)
 			}
 
 			time.Sleep(time.Second * 30)
 		}
 	}()
-	log.Logger.Infow("Connect to redis database successfully")
+	logger.Logger.Infow("Connect to redis database successfully")
 	return
 }

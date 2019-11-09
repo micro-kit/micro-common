@@ -4,9 +4,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
 	"github.com/micro-kit/micro-common/config"
-	"github.com/micro-kit/micro-common/log"
+	"github.com/micro-kit/micro-common/logger"
+	"go.etcd.io/etcd/clientv3"
 )
 
 /* etcd3 连接对象 */
@@ -24,6 +24,6 @@ func init() {
 		DialTimeout: 15 * time.Second,
 	})
 	if err != nil {
-		log.Logger.Panicw("Create etcd3 client error", "err", err)
+		logger.Logger.Panicw("Create etcd3 client error", "err", err)
 	}
 }

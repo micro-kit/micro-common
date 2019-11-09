@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/micro-kit/micro-common/config"
 	"github.com/micro-kit/micro-common/etcdcli"
-	"github.com/micro-kit/micro-common/log"
+	"github.com/micro-kit/micro-common/logger"
 )
 
 var (
@@ -44,30 +44,30 @@ func initDB() {
 	var err error
 	// 初始化MasterDB
 	err = config.GetDBConfig(etcdcli.EtcdCli, "master", func(cfg *config.DbConfig) {
-		log.Logger.Infow("Start connecting to database master node")
+		logger.Logger.Infow("Start connecting to database master node")
 		// 创建数据库连接
 		MasterDB, err = NewDbClient(cfg)
 		if err != nil {
-			log.Logger.Panicw("Connect database master node error", "err", err)
+			logger.Logger.Panicw("Connect database master node error", "err", err)
 		}
-		log.Logger.Infow("Connect database master node successfully")
+		logger.Logger.Infow("Connect database master node successfully")
 	})
 	if err != nil {
-		log.Logger.Panicw("Get db configuration error", "err", err)
+		logger.Logger.Panicw("Get db configuration error", "err", err)
 	}
 
 	// 初始化SlaveDB
 	err = config.GetDBConfig(etcdcli.EtcdCli, "slave", func(cfg *config.DbConfig) {
-		log.Logger.Infow("Start connecting to database slave node")
+		logger.Logger.Infow("Start connecting to database slave node")
 		// 创建数据库连接
 		SlaveDB, err = NewDbClient(cfg)
 		if err != nil {
-			log.Logger.Panicw("Connect database slave node error", "err", err)
+			logger.Logger.Panicw("Connect database slave node error", "err", err)
 		}
-		log.Logger.Infow("Connect database slave node successfully")
+		logger.Logger.Infow("Connect database slave node successfully")
 	})
 	if err != nil {
-		log.Logger.Panicw("Get db slave configuration error", "err", err)
+		logger.Logger.Panicw("Get db slave configuration error", "err", err)
 	}
 
 }
@@ -110,7 +110,7 @@ func NewDbClient(cfg *config.DbConfig) (*gorm.DB, error) {
 			// ping
 			err = db.DB().Ping()
 			if err != nil {
-				log.Logger.Errorw("mysql ping error", "err", err)
+				logger.Logger.Errorw("mysql ping error", "err", err)
 			}
 			// 间隔30s ping一次
 			time.Sleep(time.Second * 30)

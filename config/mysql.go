@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/mvcc/mvccpb"
+	"go.etcd.io/etcd/clientv3"
+	"go.etcd.io/etcd/mvcc/mvccpb"
 	"github.com/naoina/toml"
 )
 
@@ -27,7 +27,7 @@ func GetDBConfig(cli *clientv3.Client, node string, updateConfig func(*DbConfig)
 	if node != "master" && node != "slave" {
 		return errors.New("Node can only be master or slave.")
 	}
-	key := "root/config/" + GetSvcName() + "mysql/" + node + ".toml"
+	key := "root/config/" + GetSvcName() + "/mysql/" + node + ".toml"
 	// fmt.Println(key)
 	// 初始化master连接
 	etcdResp, err := cli.Get(context.Background(), key, clientv3.WithPrefix())

@@ -22,9 +22,13 @@ const (
 	// 默认注册ttl 秒
 	DEFAULT_REGISTER_TTL int64 = 5
 	// 服务调用地址
-	DEFAULT_GRPC_ADVERTISE_ADDR string = ""
+	DEFAULT_GRPC_ADVERTISE_ADDR string = "127.0.0.1:28080"
 	// 服务注册根路径
 	DEFAULT_SCHEMA string = "microkit"
+	// DEFAULT_SVC_ID 默认服务ID
+	DEFAULT_SVC_ID = "1"
+	// 链路追踪服务地址
+	DEFAULT_JAEGER_AGENTHOSTPORT = "127.0.0.1:5775"
 )
 
 // GetETCDAddr 读取etcd服务地址
@@ -72,6 +76,15 @@ func GetSvcName() string {
 	return svcName
 }
 
+// GetSvcID 获取服务id
+func GetSvcID() string {
+	id := os.Getenv("SVC_ID")
+	if id == "" {
+		id = DEFAULT_SVC_ID
+	}
+	return id
+}
+
 // GetMode 当前运行环境
 func GetMode() string {
 	mode := os.Getenv("MODE")
@@ -112,6 +125,15 @@ func GetSchema() string {
 	schema := os.Getenv("DEFAULT_SCHEMA")
 	if schema == "" {
 		return DEFAULT_SCHEMA
+	}
+	return schema
+}
+
+// GetJaegerAgentHostPort 链路追踪服务地址
+func GetJaegerAgentHostPort() string {
+	schema := os.Getenv("JAEGER_AGENTHOSTPORT")
+	if schema == "" {
+		return DEFAULT_JAEGER_AGENTHOSTPORT
 	}
 	return schema
 }
