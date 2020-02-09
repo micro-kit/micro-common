@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/micro-kit/micro-common/log"
+	"github.com/micro-kit/micro-common/logger"
 	"github.com/micro-kit/micro-common/microerror"
 	"golang.org/x/net/websocket"
 )
@@ -21,7 +21,7 @@ type MicroPacket struct {
 	Length         uint16           `json:"length"`        // 包长度,2字节
 	EndpointType   TCPEndpointType  `json:"endpoint_type"` // 消息对应的端点
 	Sequence       uint16           `json:"sequence"`      // 报文序号,客户端自增，服务端回复消息时原样返回，服务端主动发消息时，为0
-	Code           int16            `json:"code"`          // 服务端返回错误代码
+	Code           uint32           `json:"code"`          // 服务端返回错误代码
 	Reserve        int32            `json:"reserve"`       // 预留
 	Payload        string           `json:"payload"`       // 报文内容 为兼容websocket暂时为string类型
 	WebsocketCodec *websocket.Codec `json:"-"`
@@ -48,7 +48,7 @@ func (mp *MicroPacket) Unmarshal(data []byte, c chan interface{}) ([]byte, error
 		}
 	}()
 	// 长度不足4个字节无法获取包长度
-	if len(data) < 14 {
+	if len(data) < 16 {
 		return data, err
 	}
 	// 截取前两个字节判断是否是 'VI'
@@ -58,7 +58,7 @@ func (mp *MicroPacket) Unmarshal(data []byte, c chan interface{}) ([]byte, error
 	}
 	// 获取包长度
 	packetLength := BytesToInt16(data[2:4])
-	packetLength = packetLength + 14
+	packetLength = packetLength + 16
 	// 判断data是否大于一个报文长度
 	if len(data) < int(packetLength) {
 		return data, err
@@ -78,17 +78,17 @@ func (mp *MicroPacket) Unmarshal(data []byte, c chan interface{}) ([]byte, error
 
 // UnmarshalOne 将一个包长的字节转为一个对象
 func (mp *MicroPacket) UnmarshalOne(data []byte) (*MicroPacket, error) {
-	if len(data) < 14 {
-		return nil, errors.New("包长不足14个字节")
+	if len(data) < 16 {
+		return nil, errors.New("包长不足16个字节")
 	}
 	packet := new(MicroPacket)
 	packet.Header = "VI"
 	packet.Length = BytesToUint16(data[2:4])
 	packet.EndpointType = TCPEndpointType(BytesToInt16(data[4:6]))
 	packet.Sequence = BytesToUint16(data[6:8])
-	packet.Code = BytesToInt16(data[8:10])
-	packet.Reserve = BytesToInt32(data[10:14])
-	packet.Payload = string(data[14:])
+	packet.Code = BytesToUint32(data[8:12])
+	packet.Reserve = BytesToInt32(data[12:16])
+	packet.Payload = string(data[16:])
 	return packet, nil
 }
 
@@ -113,9 +113,9 @@ func (mp *MicroPacket) Marshal(v interface{}) ([]byte, error) {
 	// 写入预留
 	packetData.Write(IntToBytes(packet.Reserve))
 
-	// 判断包头长度是否是 14
-	if packetData.Len() != 14 {
-		return nil, errors.New("报文长度不是14")
+	// 判断包头长度是否是 16
+	if packetData.Len() != 16 {
+		return nil, errors.New("报文长度不是16")
 	}
 	// 写入内容
 	packetData.WriteString(packet.Payload)
@@ -164,7 +164,7 @@ func (mp *MicroPacket) GetWebsocketCodec() *websocket.Codec {
 func MakeMicroPacket(endpointType TCPEndpointType, payload interface{}, sequence ...uint16) *MicroPacket {
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
-		log.Logger.Errorw("tcp打包错误，payload转json错误", "err", err)
+		logger.Logger.Errorw("tcp打包错误，payload转json错误", "err", err)
 		return nil
 	}
 	var seq uint16
@@ -172,7 +172,7 @@ func MakeMicroPacket(endpointType TCPEndpointType, payload interface{}, sequence
 		seq = sequence[0]
 	}
 	// 判断payload是否是*microerror.MicroError，如果是取出code
-	var code int16
+	var code uint32
 	if payload != nil {
 		if microError, ok := payload.(*microerror.MicroError); ok == true {
 			code = microError.Code
