@@ -39,6 +39,6 @@ func init() {
 	encoder := zap.NewProductionEncoderConfig()
 	encoder.EncodeTime = zapcore.EpochMillisTimeEncoder // 时间格式
 	core := zapcore.NewCore(zapcore.NewJSONEncoder(encoder), syncWriter, zap.NewAtomicLevelAt(zapcore.Level(level)))
-	logger := zap.New(core, zap.AddCaller())
+	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(0))
 	Logger = logger.Sugar()
 }

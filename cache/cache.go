@@ -17,6 +17,11 @@ var (
 	Client goredis.Cmdable
 )
 
+var (
+	// NilErr 没有错误
+	NilErr = goredis.Nil
+)
+
 // GetClient 获取redis连接对象
 func GetClient() goredis.Cmdable {
 	if Client == nil {

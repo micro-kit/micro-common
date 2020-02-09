@@ -28,7 +28,7 @@ func GetRedisConfg(cli *clientv3.Client, updateConfig func(*RedisConfg)) error {
 		return err
 	}
 	if len(etcdResp.Kvs) == 0 {
-		return errors.New("The redis configuration configured to be empty.")
+		return errors.New("The redis configuration configured to be empty. key: " + key)
 	}
 	redisConfg := new(RedisConfg)
 	err = toml.Unmarshal(etcdResp.Kvs[0].Value, redisConfg)

@@ -21,6 +21,7 @@ var (
 		/* 常用基础错误 */
 		10000: NewMicroError(10000, "Unknown server error"), // 服务端错误
 		10001: NewMicroError(10001, "record not found"),     // db数据未查询到
+		10002: NewMicroError(10002, "Parameter error"),      // 参数错误
 
 	}
 )
