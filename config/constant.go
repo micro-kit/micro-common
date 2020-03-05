@@ -17,7 +17,7 @@ const (
 	DEFAULT_TCP_ADDR string = "127.0.0.1:38080"
 	// DEFAULT_SVC_NAME 默认服务名
 	DEFAULT_SVC_NAME string = "default"
-	// 当前运行环境，dev or pro
+	// 当前运行环境，dev or pro or test
 	DEFAULT_MODE string = "dev"
 	// 默认注册ttl 秒
 	DEFAULT_REGISTER_TTL int64 = 5

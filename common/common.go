@@ -1,9 +1,13 @@
 package common
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
+
+	"github.com/micro-kit/micro-common/config"
 )
 
 /* 公共函数库 */
@@ -30,4 +34,9 @@ func PathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+// GetWithTimeout 公共rpc请求超时
+func GetWithTimeout(c context.Context) (context.Context, context.CancelFunc) {
+	return context.WithTimeout(c, time.Duration(config.GetRegisterTTL())*time.Second)
 }
