@@ -37,7 +37,7 @@ func init() {
 // 初始化redis
 func initRedis() {
 	var err error
-	err = config.GetRedisConfg(etcdcli.EtcdCli, func(cfg *config.RedisConfg) {
+	err = config.GetRedisConfig(etcdcli.EtcdCli, func(cfg *config.RedisConfig) {
 		Client, err = NewClient(cfg)
 		if err != nil {
 			logger.Logger.Panicw("Creating redis connection errors", "err", err)
@@ -49,7 +49,7 @@ func initRedis() {
 }
 
 // NewClient 创建客户端连接
-func NewClient(cfg *config.RedisConfg) (client goredis.Cmdable, err error) {
+func NewClient(cfg *config.RedisConfig) (client goredis.Cmdable, err error) {
 	if cfg == nil {
 		err = errors.New("The redis configuration file can not be empty.")
 		return

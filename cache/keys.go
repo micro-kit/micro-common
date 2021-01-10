@@ -18,8 +18,7 @@ func GetPrefixKey(key string) string {
 
 // GetUserLoginToken 获取token存储key
 func GetUserLoginToken() (key, token string) {
-	tokenUUID, _ := uuid.NewV4()
-	token = tokenUUID.String()
+	token = uuid.NewV4().String()
 	key = GetPrefixKey("login:token:" + token)
 	return
 }

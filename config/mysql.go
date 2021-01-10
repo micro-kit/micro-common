@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"go.etcd.io/etcd/clientv3"
-	"go.etcd.io/etcd/mvcc/mvccpb"
+	"github.com/coreos/etcd/mvcc/mvccpb"
 	"github.com/naoina/toml"
+	"go.etcd.io/etcd/clientv3"
 )
 
 // DbConfig 数据库配置
@@ -29,7 +29,7 @@ func GetDBConfig(cli *clientv3.Client, node string, updateConfig func(*DbConfig)
 	}
 	key := "root/config/" + GetSvcName() + "/mysql/" + node + ".toml"
 	// fmt.Println(key)
-	// 初始化master连接
+	// 读etcd配置
 	etcdResp, err := cli.Get(context.Background(), key, clientv3.WithPrefix())
 	if err != nil {
 		return err

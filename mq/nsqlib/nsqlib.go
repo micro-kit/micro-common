@@ -1,6 +1,7 @@
 package nsqlib
 
 import (
+	"log"
 	"os"
 
 	"github.com/nsqio/go-nsq"
@@ -16,12 +17,13 @@ func NewProducer() (*nsq.Producer, error) {
 		return nil, err
 	}
 	mode := os.Getenv("DEFAULT_MODE")
+	myLog := log.New(os.Stderr, "", log.Flags())
 	if mode == "dev" {
-		producer.SetLoggerLevel(nsq.LogLevelDebug)
+		producer.SetLogger(myLog, nsq.LogLevelDebug)
 	} else if mode == "test" {
-		producer.SetLoggerLevel(nsq.LogLevelInfo)
+		producer.SetLogger(myLog, nsq.LogLevelInfo)
 	} else {
-		producer.SetLoggerLevel(nsq.LogLevelWarning)
+		producer.SetLogger(myLog, nsq.LogLevelWarning)
 	}
 	err = producer.Ping()
 	if err != nil {
