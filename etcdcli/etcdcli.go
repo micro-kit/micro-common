@@ -22,6 +22,8 @@ func init() {
 	EtcdCli, err = clientv3.New(clientv3.Config{
 		Endpoints:   strings.Split(etcdAddr, ";"),
 		DialTimeout: 15 * time.Second,
+		Password:    config.GetETCDPassword(),
+		Username:    config.GetETCDUser(),
 	})
 	if err != nil {
 		logger.Logger.Panicw("Create etcd3 client error", "err", err)

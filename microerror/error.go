@@ -12,16 +12,24 @@ import (
 
 const (
 	// UnknownServerError 服务端默认错误
-	UnknownServerError uint32 = 10000
+	Success             uint32 = 1
+	UnknownServerError  uint32 = 10000
+	RecordNotFoundError uint32 = 10001
+	ParameterError      uint32 = 10002
+	MysqlDbError        uint32 = 10003
+	RedisDbError        uint32 = 10005
 )
 
 // 基础错误 - 错误码为int32数字
 var (
 	errors = map[uint32]*MicroError{
+		Success: NewMicroError(UnknownServerError, "Success"),
 		/* 常用基础错误 */
-		10000: NewMicroError(10000, "Unknown server error"), // 服务端错误
-		10001: NewMicroError(10001, "record not found"),     // db数据未查询到
-		10002: NewMicroError(10002, "Parameter error"),      // 参数错误
+		UnknownServerError:  NewMicroError(UnknownServerError, "Unknown server error"), // 服务端错误
+		RecordNotFoundError: NewMicroError(RecordNotFoundError, "record not found"),    // db数据未查询到
+		ParameterError:      NewMicroError(ParameterError, "Parameter error"),          // 参数错误
+		MysqlDbError:        NewMicroError(MysqlDbError, "Db error"),                   // db错误
+		RedisDbError:        NewMicroError(RedisDbError, "Redis error"),                // redis错误
 
 	}
 )

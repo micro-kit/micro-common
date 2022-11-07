@@ -9,6 +9,10 @@ import (
 const (
 	// DEFAULT_ETCD_ADDR 默认etcd地址
 	DEFAULT_ETCD_ADDR string = "127.0.0.1:2379"
+	// DEFAULT_ETCD_USER 默认etcd用户名
+	DEFAULT_ETCD_USER string = "root"
+	// DEFAULT_ETCD_PASSWORD 默认etcd密码
+	DEFAULT_ETCD_PASSWORD string = ""
 	// DEFAULT_HTTP_ADDR 默认http监听地址
 	DEFAULT_HTTP_ADDR string = "127.0.0.1:18080"
 	// DEFAULT_GRPC_ADDR 默认grpc监听地址
@@ -36,6 +40,24 @@ func GetETCDAddr() string {
 	etcdAddr := os.Getenv("ETCD_ADDR")
 	if etcdAddr == "" {
 		return DEFAULT_ETCD_ADDR
+	}
+	return etcdAddr
+}
+
+// GetETCDPassword etcd密码
+func GetETCDUser() string {
+	etcdAddr := os.Getenv("ETCD_USER")
+	if etcdAddr == "" {
+		return DEFAULT_ETCD_USER
+	}
+	return etcdAddr
+}
+
+// GetETCDPassword etcd密码
+func GetETCDPassword() string {
+	etcdAddr := os.Getenv("ETCD_PASSWORD")
+	if etcdAddr == "" {
+		return DEFAULT_ETCD_PASSWORD
 	}
 	return etcdAddr
 }
