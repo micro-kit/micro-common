@@ -45,8 +45,9 @@ require (
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
 	go.etcd.io/bbolt v0.0.0-00010101000000-000000000000 // indirect
 	go.etcd.io/etcd v3.3.20+incompatible
+	go.mongodb.org/mongo-driver v1.11.0
 	go.uber.org/zap v1.14.1
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/grpc v1.28.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0

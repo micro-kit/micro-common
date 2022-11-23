@@ -18,6 +18,7 @@ const (
 	ParameterError      uint32 = 10002
 	MysqlDbError        uint32 = 10003
 	RedisDbError        uint32 = 10005
+	MongoDbError        uint32 = 10006
 )
 
 // 基础错误 - 错误码为int32数字
@@ -30,6 +31,7 @@ var (
 		ParameterError:      NewMicroError(ParameterError, "Parameter error"),          // 参数错误
 		MysqlDbError:        NewMicroError(MysqlDbError, "Db error"),                   // db错误
 		RedisDbError:        NewMicroError(RedisDbError, "Redis error"),                // redis错误
+		MongoDbError:        NewMicroError(MongoDbError, "Mongo error"),                // mongo错误
 
 	}
 )
