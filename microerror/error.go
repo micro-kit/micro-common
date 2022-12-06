@@ -26,12 +26,12 @@ var (
 	errors = map[uint32]*MicroError{
 		Success: NewMicroError(UnknownServerError, "Success"),
 		/* 常用基础错误 */
-		UnknownServerError:  NewMicroError(UnknownServerError, "Unknown server error"), // 服务端错误
-		RecordNotFoundError: NewMicroError(RecordNotFoundError, "record not found"),    // db数据未查询到
-		ParameterError:      NewMicroError(ParameterError, "Parameter error"),          // 参数错误
-		MysqlDbError:        NewMicroError(MysqlDbError, "Db error"),                   // db错误
-		RedisDbError:        NewMicroError(RedisDbError, "Redis error"),                // redis错误
-		MongoDbError:        NewMicroError(MongoDbError, "Mongo error"),                // mongo错误
+		UnknownServerError:  NewMicroError(UnknownServerError, "服务端错误"),  // 服务端错误
+		RecordNotFoundError: NewMicroError(RecordNotFoundError, "未找到记录"), // db数据未查询到
+		ParameterError:      NewMicroError(ParameterError, "参数错误"),       // 参数错误
+		MysqlDbError:        NewMicroError(MysqlDbError, "Db error"),     // db错误
+		RedisDbError:        NewMicroError(RedisDbError, "Redis error"),  // redis错误
+		MongoDbError:        NewMicroError(MongoDbError, "Mongo error"),  // mongo错误
 
 	}
 )

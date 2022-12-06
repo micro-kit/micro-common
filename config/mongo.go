@@ -11,7 +11,7 @@ import (
 
 // MongoConfig mongo配置
 type MongoConfig struct {
-	Address     []string `toml:"address"`       // mongo 服务器地址,包括地址和端口 127.0.0.1:6379
+	Address     []string `toml:"address"`       // mongo 服务器地址,包括地址和端口 127.0.0.1:27017
 	Db          string   `toml:"db"`            // mongo db
 	MaxPoolSize int      `toml:"max_pool_size"` // 连接池最大值
 	MinPoolSize int      `toml:"min_pool_size"` // 连接池最小值
