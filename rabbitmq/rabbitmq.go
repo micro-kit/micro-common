@@ -35,6 +35,7 @@ func init() {
 }
 
 func initRabbitmq() {
+	log.Println("开始初始化rabbitmq连接")
 	var err error
 	err = config.GetRabbitmqConfig(etcdcli.EtcdCli, func(cfg *config.RabbitmqConfig) {
 		rabbitmqConfig = cfg
