@@ -97,7 +97,7 @@ func (rh *RabbitmqHandler) notifyClose(chanClose chan *amqp.Error) {
 }
 
 // 发送mq消息
-func (rh *RabbitmqHandler) SendMessage(exchange, exchangeType, routingKey, body string, bodyType string) error {
+func (rh *RabbitmqHandler) SendMessage(exchange, exchangeType, routingKey string, body []byte, bodyType string) error {
 	ch, err := rh.client.Channel()
 	if err != nil {
 		return err
